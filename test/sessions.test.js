@@ -5,6 +5,8 @@ const supertest = require ('supertest')
 const expect = chai.expect
 const requester = supertest('http://localhost:8080')
 
+
+//revisar completo con ejemplo de clase - Sessions
 describe('Testing para endpoints de sessions', () => {
 
     it('Testing del endpoint POST /api/sessions/register, debe registrar un usuario correctamente', async () => {
