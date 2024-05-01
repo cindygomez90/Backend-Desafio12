@@ -36,7 +36,7 @@ describe('Testing para endpoints de carritos', () => {
             .set('Authorization', 'Bearer token_de_prueba') //ver autenticación
             .send({ })
 
-        //expect(res).to.have.status(200);
+        //expect(res).to.have.status(200);  //revisar porque no valida status
         //expect(res.body).to.be.an('object')
         expect (_body.payload.status).to.be.true
         expect (_body.payload).to.have.property('_id').to.equal(cid)

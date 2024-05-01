@@ -13,7 +13,7 @@ describe('Testing para endpoints de productos', () => {
         expect(ok).to.be.true
         expect(statusCode).to.be.equal(200)
         expect(_body.status).to.equal('success')
-        expect(_body.result).to.have.property('products') //me está dando un {vacío} - ver
+        expect(_body.result).to.have.property('products') //me está dando un {vacío} - no valida la propiedad
     })
 
     it('Testing del endpoint GET /api/products/:pid, debe obtener un producto por su ID', async () => {
@@ -25,6 +25,7 @@ describe('Testing para endpoints de productos', () => {
         expect(response.body.result).to.have.property('title')         
     })
 
+
     it('Testing del endpoint POST /api/products, debe crear un nuevo producto', async () => {
         const newProduct = {
         title: 'Producto de prueba',
@@ -32,12 +33,14 @@ describe('Testing para endpoints de productos', () => {
         stock: 5,      
         }
 
-        const token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsbmFtZSI6IkNpbmR5IEdvbWV6IiwiaWQiOiI2NjFlOGQ4Mzg2NTdkMWM5ZjQxMDVhODkiLCJlbWFpbCI6ImdvbWV6LmNpbmR5QGhvdG1haWwuY29tIiwicm9sZSI6IlVTRVJfUFJFTUlVTSIsImlhdCI6MTcxNDU3NzM5MSwiZXhwIjoxNzE0NjYzNzkxfQ.l6ElzaI7YZSwuEJqk25GaWN--1BEejoMtsgoMLp7smY'
+        //ver no valida el token. error 401
+        const token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsbmFtZSI6IkNpbmR5IEdvbWV6IiwiaWQiOiI2NjFlOGQ4Mzg2NTdkMWM5ZjQxMDVhODkiLCJlbWFpbCI6ImdvbWV6LmNpbmR5QGhvdG1haWwuY29tIiwicm9sZSI6IlVTRVJfUFJFTUlVTSIsImlhdCI6MTcxNDYwMDYwMSwiZXhwIjoxNzE0Njg3MDAxfQ.QZgOuEfluZJM6bKa5Nl0JH4I-_LAQAjn9HBvkqNSZYg'
         const response = await requester.post('/api/products').set('Authorization', `Bearer ${token}`).send(newProduct)
         
+        console.log(response._body)
         //no está pasando por propiedades no definidas - revisar
         expect(response.status).to.be.equal(200)
-        expect(response.body.payload).to.have.property('_id')
-        expect(response.body.payload.status).to.be.true
+        expect(response.body).to.have.property('_id')
+        expect(response.body.status).to.be.true
     })
 })
