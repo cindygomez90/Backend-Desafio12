@@ -38,7 +38,11 @@
                 })
             } catch (error) {
                 console.log (error)
-                }
+                res.status(500).json({
+                    status: "error",
+                    message: "Error al obtener el carrito."
+                })
+            }
         }
 
         addProductToCart = async (req, res, next) => {

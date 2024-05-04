@@ -22,6 +22,7 @@ describe('Testing para endpoints de carritos', () => {
     it('Testing del endpoint GET /api/carts/:cid, debe obtener un carrito por su ID', async () => {
         const cid = '65b189e7d6a8cbec9e0b4264'
         const response = await requester.get(`/api/products/${cid}`)
+        console.log(response.body)
 
         expect(response.status).to.equal(200)
         expect(response.body).to.be.an('object')

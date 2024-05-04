@@ -1,6 +1,7 @@
 const chai = require('chai')
 const { describe } = require('node:test')
 const supertest = require('supertest')
+const { generateToken } = require ('../ecommerce/src/utils/jsonwebtoken.js')
 
 const expect = chai.expect
 const requester = supertest('http://localhost:8080')
@@ -13,7 +14,7 @@ describe('Testing para endpoints de productos', () => {
         expect(ok).to.be.true
         expect(statusCode).to.be.equal(200)
         expect(_body.status).to.equal('success')
-        expect(_body.result).to.have.property('products') //me está dando un {vacío} - no valida la propiedad
+        expect(_body.result).to.have.property('products')
     })
 
     it('Testing del endpoint GET /api/products/:pid, debe obtener un producto por su ID', async () => {
@@ -22,25 +23,35 @@ describe('Testing para endpoints de productos', () => {
         
         expect(response.status).to.equal(200)
         expect(response.body.status).to.equal('success')
+        expect(response.body.result).to.have.property('_id') 
         expect(response.body.result).to.have.property('title')         
     })
 
 
-    it('Testing del endpoint POST /api/products, debe crear un nuevo producto', async () => {
-        const newProduct = {
+    it('Testing del endpoint POST /api/products, debe crear un nuevo producto si es un usuario autorizado', async () => {
+        
+        const token = generateToken({ 
+            id: 'i65ece9c82540d110accd59ef', 
+            role: 'ADMIN' 
+        })
+
+        const productNew = {
         title: 'Producto de prueba',
         price: 10.000,
         stock: 5,      
         }
 
-        //ver no valida el token. error 401
-        const token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsbmFtZSI6IkNpbmR5IEdvbWV6IiwiaWQiOiI2NjFlOGQ4Mzg2NTdkMWM5ZjQxMDVhODkiLCJlbWFpbCI6ImdvbWV6LmNpbmR5QGhvdG1haWwuY29tIiwicm9sZSI6IlVTRVJfUFJFTUlVTSIsImlhdCI6MTcxNDYwMDYwMSwiZXhwIjoxNzE0Njg3MDAxfQ.QZgOuEfluZJM6bKa5Nl0JH4I-_LAQAjn9HBvkqNSZYg'
-        const response = await requester.post('/api/products').set('Authorization', `Bearer ${token}`).send(newProduct)
-        
-        console.log(response._body)
-        //no está pasando por propiedades no definidas - revisar
-        expect(response.status).to.be.equal(200)
-        expect(response.body).to.have.property('_id')
-        expect(response.body.status).to.be.true
+        const response = await requester.post('/api/products').set('Authorization', `Bearer ${token}`).send(productNew)
+            
+        console.log(response.body)
+
+        expect(response.status).to.equal(200)
+        expect(response.body).to.have.property('product')
+
+        //const createdProduct = response.body.product
+        //expect(createdProduct).to.have.property('title', 'Producto de prueba')
+        //expect(createdProduct).to.have.property('price', 10.000)
+        //expect(createdProduct).to.have.property('stock', 5)
     })
+        
 })

@@ -12,8 +12,8 @@ const { generateProductErrorInfo } = require ('../utils/errors/info.js')
 
         getProducts = async (req, res) => {
             try {
-                const { limit = 10, pageQuery = 1, category, order, status } = req.query
-        
+                const { limit = 10, pageQuery = 1, category = '', order, status } = req.query
+                
                 const filter = {}
                 if (category) {
                     filter.category = category
@@ -29,38 +29,40 @@ const { generateProductErrorInfo } = require ('../utils/errors/info.js')
                 } else {
                     sortOptions.price = -1
                 }
+
+                const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page, totalPages } = await this.productService.getProducts(filter, { limit, page: pageQuery, sort: sortOptions, lean: true })
         
-                const {
-                    docs,
-                    hasPrevPage,
-                    hasNextPage,
-                    prevPage,
-                    nextPage,
-                    page,
-                    totalPages,
-                } = await this.productService.getProducts(filter, { limit, page: pageQuery, sort: sortOptions, lean: true })
+                if (!docs || docs.length === 0) {
+                    return res.status(404).json({
+                        msg: 'No existen productos',
+                        products: false
+                    });
+                }  
+                
         
-                res.json({
+                res.status(200).json({
                     status: 'success',
                     result: {
                         products: docs,
                         totalPages: totalPages,
-                        hasPrevPage,
-                        hasNextPage,
-                        prevPage,
-                        nextPage,
-                        page,
-                    },
+                        hasPrevPage: hasPrevPage,
+                        hasNextPage: hasNextPage,
+                        prevPage: prevPage,
+                        nextPage: nextPage,
+                        prevLink: prevPage ? `http://localhost:8080/api/products?page=${prevPage}` : null,
+                        nextLink: nextPage ? `http://localhost:8080/api/products?page=${nextPage}` : null,                    
+                        page: page,
+                    }
                 })
             } catch (error) {
-                console.log(error);
+                console.log(error)
                 res.status(500).json({
                     status: 'error',
                     error: error.message,
                 })
             }
         }
-        
+
         getProduct = async (req, res)=>{  
             try {      
                 const { pid } = req.params        

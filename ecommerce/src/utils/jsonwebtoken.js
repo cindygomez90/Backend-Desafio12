@@ -8,8 +8,8 @@ const generateToken = user => {
     const token = jwt.sign(user, jwt_secret_Key, {
         expiresIn: '1d'
     });
-    console.log('Token generado:', token);
-    return token;
+    console.log('Token generado:', token)
+    return token
 }
 
 

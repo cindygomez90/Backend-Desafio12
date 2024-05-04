@@ -17,11 +17,11 @@ describe('Testing para endpoints de sessions', () => {
         }
 
         const { _body, ok, statusCode } = await requester.post('/api/sessions/register').send(mockUser)
-        
+
         expect(statusCode).to.equal(200)
         expect(_body).to.be.an('object')
-        //expect(_body).to.have.property('usersCreate') //ver porque no valida la propiedad
-        //expect(_body).to.have.property('token')   //ver porque no valida la propiedad
+        expect(_body).to.have.property('usersCreate') 
+        expect(_body).to.have.property('token') 
     })
 
     it('Testing del endpoint POST /api/sessions/login, debe iniciar sesión de un usuario correctamente', async() => {
@@ -38,7 +38,8 @@ describe('Testing para endpoints de sessions', () => {
 
     //ver autenticación y permisos para acceder a la ruta
     it('Testing del endpoint GET /api/sessions/current, debe acceder a cierta información', async () => {
-        const {_body, ok, statusCode } = await requester.get('/api/sessions/current').set('Authorization', 'Bearer token_de_prueba').send()
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsbmFtZSI6IkNpbmR5IEdvbWV6IiwiaWQiOiI2NWVjZTljODI1NDBkMTEwYWNjZDU5ZWYiLCJlbWFpbCI6ImdAaG90bWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MTQ2OTgyMjYsImV4cCI6MTcxNDc4NDYyNn0.fpLEE5mEdMALZkFAp88jk3Z-p-mgd3sBzQ0HvaRRpLI'
+        const {_body, ok, statusCode } = await requester.get('/api/sessions/current').set('Authorization', `Bearer ${token}`).send()
 
         expect(ok).to.be.true
         expect(statusCode).to.equal(200)

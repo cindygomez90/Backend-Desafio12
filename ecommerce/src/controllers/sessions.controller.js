@@ -94,7 +94,7 @@ class SessionController {
             maxAge: 60*60*1000*24,  
             httpOnly: true 
         })
-    
+
         const products = await this.productService.getProducts()
         responses.render('products', { user: userDto, products})
     }
