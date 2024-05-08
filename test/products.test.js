@@ -31,8 +31,8 @@ describe('Testing para endpoints de productos', () => {
     it('Testing del endpoint POST /api/products, debe crear un nuevo producto si es un usuario autorizado', async () => {
         
         const token = generateToken({ 
-            id: 'i65ece9c82540d110accd59ef', 
-            role: 'ADMIN' 
+            id: '661e8d838657d1c9f4105a89', 
+            role: 'USER_PREMIUM' 
         })
 
         const productNew = {
@@ -41,17 +41,9 @@ describe('Testing para endpoints de productos', () => {
         stock: 5,      
         }
 
-        const response = await requester.post('/api/products').set('Authorization', `Bearer ${token}`).send(productNew)
+        const response = await requester.post('/api/products').set('Cookie', `cookieToken=${token}`).send(productNew)
             
-        console.log(response.body)
-
         expect(response.status).to.equal(200)
-        expect(response.body).to.have.property('product')
-
-        //const createdProduct = response.body.product
-        //expect(createdProduct).to.have.property('title', 'Producto de prueba')
-        //expect(createdProduct).to.have.property('price', 10.000)
-        //expect(createdProduct).to.have.property('stock', 5)
-    })
-        
+        expect(response.body.result).to.have.property('_id')
+    })        
 })

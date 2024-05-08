@@ -1,8 +1,8 @@
 const { productService } = require ('../repositories/index.js')
+const { productModel } = require ('../daos/Mongo/models/products.model.js')
 const { CustomError } = require ('../utils/errors/customError.js')
 const { EErrors } = require ('../utils/errors/enums.js')
 const { generateProductErrorInfo } = require ('../utils/errors/info.js')
-
 
     class ProductController {
 
@@ -30,13 +30,13 @@ const { generateProductErrorInfo } = require ('../utils/errors/info.js')
                     sortOptions.price = -1
                 }
 
-                const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page, totalPages } = await this.productService.getProducts(filter, { limit, page: pageQuery, sort: sortOptions, lean: true })
+                const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page, totalPages } = await productModel.paginate(filter, { limit, page: pageQuery, sort: sortOptions, lean: true })
         
                 if (!docs || docs.length === 0) {
                     return res.status(404).json({
                         msg: 'No existen productos',
                         products: false
-                    });
+                    })
                 }  
                 
         

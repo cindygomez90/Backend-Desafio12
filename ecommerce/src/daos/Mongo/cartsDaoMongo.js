@@ -9,7 +9,7 @@
         async getBy(cid) {
                 const cart = await cartModel.findOne({_id:cid})
                 if (!cart) {
-                    return 'No se encuentra el id del carrito indicado'
+                    return { error: 'No se encuentra el id del carrito indicado' }
                 }
                 return cart
             } 

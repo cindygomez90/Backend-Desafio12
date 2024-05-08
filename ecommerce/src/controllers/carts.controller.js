@@ -27,17 +27,24 @@
                 }
             }
 
-        
         getCart = async (req, res) => {
             try {
-                const {cid} = req.params
-                const cart = await this.cartService.getCart (cid) 
-                res.send ({
-                    status: "succes", 
-                    payload: cart
-                })
+                const { cid } = req.params
+                const result = await this.cartService.getCart(cid)
+        
+                if (result.error) {
+                    res.status(404).json({
+                        status: "error",
+                        message: result.error
+                    })
+                } else {
+                    res.send({
+                        status: "success",
+                        payload: result
+                    })
+                }
             } catch (error) {
-                console.log (error)
+                console.log(error)
                 res.status(500).json({
                     status: "error",
                     message: "Error al obtener el carrito."

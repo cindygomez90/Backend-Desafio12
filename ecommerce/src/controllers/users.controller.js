@@ -40,7 +40,7 @@ class UserController {
             
             //si alguno de los campos no viene se va a instanciar el error
             if(!first_name || !last_name || !email) {
-                CustomError.createError({
+                throw CustomError.createError({
                     name: 'Error en la creación de usuario',
                     cause: generateUserErrorInfo({
                         first_name,
